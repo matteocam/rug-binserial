@@ -1,5 +1,5 @@
 [package]
-authors = ["Mathias Hall-Andersen <mathias@hall-andersen.dk>"]
+authors = ["Mathias Hall-Andersen <mathias@hall-andersen.dk>", "Matteo Campanelli <matteo.campanelli@gmail.com>"]
 description = "A very simple crate to serialize rug integers as strings of bytes (for use in efficient binary serialization)"
 edition = "2018"
 exclude = [".github"]
@@ -10,6 +10,8 @@ repository = "https://github.com/rot256/rug-binserial"
 version = "0.1.1"
 
 [dependencies]
+derive_more = { version = "0.99.0", default_features = false, features = ["mul", "from_str"] }
+
 rug = "=1.7.0"
 serde = {version = "^1.0", features = ["derive"]}
 

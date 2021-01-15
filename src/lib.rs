@@ -1,12 +1,34 @@
 use std::fmt;
+use std::ops::{Div,Rem};
+
+extern crate derive_more;
+use derive_more::{Mul,FromStr};
 
 use serde::de::{Deserializer, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Serialize, Serializer};
 
+// Macro to easily "derive" additional implementations
+macro_rules! just_impl {
+    (impl $trait_:ident for $type_:ident { fn $method: ident} ) => {
+        impl $trait_<$type_> for $type_ {
+            type Output = $type_;
+                
+            fn $method(self, $type_(b): $type_) -> $type_ {
+                let $type_(a) = self;
+                $type_(a.$method(&b))
+            }
+        }
+    }
+}
+
 /// Wrapper type for rug integer
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash, FromStr, Mul)]
 pub struct Integer(rug::Integer);
+
+just_impl! { impl Div for Integer { fn div }  }
+just_impl! { impl Rem for Integer { fn rem }  }
+
 
 struct IVisitor();
 
