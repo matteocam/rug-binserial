@@ -1,6 +1,3 @@
-
-
-
 use std::fmt;
 use std::ops::{Div,Rem,Neg};
 
@@ -10,15 +7,38 @@ use derive_more::{Mul,FromStr};
 use serde::de::{Deserializer, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Serialize, Serializer};
+use curve25519_dalek::scalar::Scalar;
+
 
 
 pub trait ProofSize {
     fn proof_size(&self) -> usize;
 }
 
-impl ProofSize for i32 {
-    fn proof_size(&self) -> usize { 1 }
+impl ProofSize for rug::Integer {
+    fn proof_size(&self) -> usize { 
+        1
+        // Should be something like
+        // as_integer: Integer = self.into(); // convert to Integer first 
+        // serde_X::to_string(&as_integer).unwrap().len()
+    } 
 }
+
+macro_rules! proof_size_from_serialize {
+    ($typ:ident) => {
+        impl ProofSize for $typ {
+            fn proof_size(&self) -> usize {
+                1
+                // should be something like
+                //serde_X::to_string(self).unwrap().len()
+            }
+        }
+    };
+}
+
+proof_size_from_serialize!(Scalar);
+
+proof_size_from_serialize!(i32);
 
 
 
@@ -117,11 +137,12 @@ mod tests {
         ]
     }
 
-
-    fn tst() {
-
-       
+    #[test]
+    fn test_proof_size() {
+        let x: i32 = 52;
+        assert_eq!(x.proof_size(), 1);
     }
+
     
     #[test]
     fn test_serialize_bincode() {

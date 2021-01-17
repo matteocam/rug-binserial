@@ -14,9 +14,10 @@ derive_more = { version = "0.99.0", default_features = false, features = ["mul",
 
 rug = "=1.7.0"
 serde = {version = "^1.0", features = ["derive"]}
+curve25519-dalek = "3.0.0"
 
 
-# rug-binserial-macros = { path = "src/rug-binserial-macros" }
+proofsize_derive = "0.1.0"
 
 
 
