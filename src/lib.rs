@@ -12,75 +12,20 @@ use serde::ser::SerializeSeq;
 use serde::{Deserialize, Serialize, Serializer};
 
 
-pub trait Abomonation {
+pub trait ProofSize {
     fn proof_size(&self) -> usize;
 }
 
-impl Abomonation for i32 {
+impl ProofSize for i32 {
     fn proof_size(&self) -> usize { 1 }
 }
 
 
 
-//use rug_binserial_macros::*;
-//use rug_binserial_macros::Interest;
-
-
-// Macros to easily "derive" additional implementations
-macro_rules! just_impl_un {
-    (impl $trait_:ident for $type_:ident { fn $method: ident} ) => {
-
-        impl $trait_ for $type_ {
-            type Output = $type_;
-                
-            fn $method(self) -> $type_ {
-                let $type_(a) = self;
-                $type_(a.$method())
-            }
-        } // end impl
-
-    } 
-} // end macro
-
-
-macro_rules! just_impl_bin {
-    (impl $trait_:ident for $type_:ident { fn $method: ident} ) => {
-
-        impl $trait_<$type_> for $type_ {
-            type Output = $type_;
-                
-            fn $method(self, $type_(b): $type_) -> $type_ {
-                let $type_(a) = self;
-                $type_(a.$method(&b))
-            }
-        } // end impl
-
-    } 
-} // end macro
-
-macro_rules! just_impl_bin_ref {
-    (impl $trait_:ident for $type_:ident { fn $method: ident} ) => {
-
-        impl<'a, 'b> $trait_<&'b $type_> for &'a $type_ {
-            type Output = $type_;
-
-            fn add(self, other: &'b $type_) -> $type_ {
-                $type_ { self.0 + other.0 }
-            }
-        } // end impl
-
-    } 
-} // end macro
-
 
 /// Wrapper type for rug integer
 #[derive(Debug, Clone, PartialEq, Eq, Hash, FromStr, Mul)]
 pub struct Integer(rug::Integer);
-
-just_impl_bin! { impl Div for Integer { fn div }  }
-just_impl_bin! { impl Rem for Integer { fn rem }  }
-just_impl_un! { impl Neg for Integer { fn neg }  }
-
 
 struct IVisitor();
 
