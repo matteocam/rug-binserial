@@ -4,7 +4,7 @@ use serde::de::{Deserializer, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
 use serde::{Deserialize, Serialize, Serializer};
 use curve25519_dalek::scalar::Scalar;
-
+use bulletproofs::r1cs::R1CSProof;
 
 
 pub trait ProofSize {
@@ -31,8 +31,11 @@ macro_rules! proof_size_from_serialize {
 }
 
 proof_size_from_serialize!(Scalar);
+proof_size_from_serialize!(R1CSProof);
+
 
 proof_size_from_serialize!(i32);
+
 
 
 
