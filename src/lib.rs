@@ -77,12 +77,6 @@ impl<'de> Deserialize<'de> for Integer {
     }
 }
 
-// for conversion from literal types
-impl From<i32> for Integer {
-    fn from(i: i32) -> Self {
-        rug::Integer::from(i).into()
-    }
-}
 
 impl From<rug::Integer> for Integer {
     fn from(i: rug::Integer) -> Self {
@@ -139,6 +133,7 @@ mod tests {
     fn test_proof_size() {
         let x: i32 = 52;
         assert_eq!(x.proof_size(), 4);
+   
     }
     
     #[test]
