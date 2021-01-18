@@ -1,8 +1,4 @@
 use std::fmt;
-use std::ops::{Div,Rem,Neg};
-
-extern crate derive_more;
-use derive_more::{Mul,FromStr};
 
 use serde::de::{Deserializer, SeqAccess, Visitor};
 use serde::ser::SerializeSeq;
@@ -17,10 +13,10 @@ pub trait ProofSize {
 
 impl ProofSize for rug::Integer {
     fn proof_size(&self) -> usize { 
-        1
+        
         // Should be something like
-        // as_integer: Integer = self.into(); // convert to Integer first 
-        // serde_X::to_string(&as_integer).unwrap().len()
+        let as_integer: Integer = self.clone().into(); // convert to Integer first 
+        bincode::serialize(&as_integer).unwrap().len()
     } 
 }
 
@@ -28,9 +24,7 @@ macro_rules! proof_size_from_serialize {
     ($typ:ident) => {
         impl ProofSize for $typ {
             fn proof_size(&self) -> usize {
-                1
-                // should be something like
-                //serde_X::to_string(self).unwrap().len()
+                bincode::serialize(self).unwrap().len()
             }
         }
     };
@@ -44,7 +38,7 @@ proof_size_from_serialize!(i32);
 
 
 /// Wrapper type for rug integer
-#[derive(Debug, Clone, PartialEq, Eq, Hash, FromStr, Mul)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Integer(rug::Integer);
 
 struct IVisitor();
@@ -140,7 +134,7 @@ mod tests {
     #[test]
     fn test_proof_size() {
         let x: i32 = 52;
-        assert_eq!(x.proof_size(), 1);
+        assert_eq!(x.proof_size(), 4);
     }
 
     
