@@ -12,15 +12,6 @@ pub trait ProofSize {
     fn proof_size(&self) -> usize;
 }
 
-impl ProofSize for rug::Integer {
-    fn proof_size(&self) -> usize { 
-        
-        // Should be something like
-        let as_integer: Integer = self.clone().into(); // convert to Integer first 
-        bincode::serialize(&as_integer).unwrap().len()
-    } 
-}
-
 macro_rules! proof_size_from_serialize {
     ($typ:ident) => {
         impl ProofSize for $typ {
@@ -40,12 +31,18 @@ proof_size_from_serialize!(CompressedRistretto);
 proof_size_from_serialize!(i32);
 
 
-
-
-
 /// Wrapper type for rug integer
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Integer(rug::Integer);
+
+impl ProofSize for rug::Integer {
+    fn proof_size(&self) -> usize { 
+        
+        // Should be something like
+        let as_integer: Integer = self.clone().into(); // convert to Integer first 
+        bincode::serialize(&as_integer).unwrap().len()
+    } 
+}
 
 struct IVisitor();
 
@@ -137,12 +134,12 @@ mod tests {
         ]
     }
 
+    
     #[test]
     fn test_proof_size() {
         let x: i32 = 52;
         assert_eq!(x.proof_size(), 4);
     }
-
     
     #[test]
     fn test_serialize_bincode() {
