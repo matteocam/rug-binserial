@@ -16,8 +16,6 @@ serde = {version = "^1.0", features = ["derive"]}
 
 curve25519-dalek = { version = "3.0.0", features = ["serde"] }
 bulletproofs = {git = "https://github.com/matteocam/bulletproofs", branch = "develop", features = ["yoloproofs"]}# R1CS interface
-accumulator = { git = "https://github.com/matteocam/cpsnarks-set-accumulator" }
-
 
 proofsize_derive = "0.1.0"
 
